@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Everybody Edits Account Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Player.IO SDK mirror -->
+    <script type="text/javascript" src="https://cdn.rawgit.com/atillabyte/PlayerIO-JS/master/PlayerIOClient.minified.js"></script>
+
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/css/uikit.min.css" />
+
+    <link href="https://fonts.googleapis.com/css?family=Barlow:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+    <style>
+        *, h3 { font-family: 'Barlow', sans-serif; }
+		h3 { font-weight: 700; }
+	</style>
+</head>
+
+<body>
+
+    <body>
+        <div class="uk-flex uk-flex-center uk-flex-middle uk-background-muted uk-height-viewport">
+            <div class="uk-position-bottom-center uk-position-small uk-visible@m">
+                <span class="uk-text-small uk-text-muted">The account credentials entered here are never sent nor stored beyond <a href="https://playerio.com/" target="_blank">Player.IO</a> &mdash; made with <span style="color: #9FA1FF;">&hearts;</span> by <a href="https://github.com/atillabyte" target="_blank">Atilla Lonny</a></span>
+            </div>
+
+            <div id="verify-change-box" hidden>
+                <div class="uk-section uk-section-muted uk-flex uk-flex-middle" uk-height-viewport="offset-top: true">
+                    <div class="uk-width-1-1">
+                        <div class="uk-container">
+                            <div uk-grid>
+                                <div class="uk-width-1-1@m">
+                                    <div class="uk-card uk-card-default uk-width-large uk-margin-auto uk-box-shadow-large">
+                                        <div class="uk-card-body">
+                                            <div uk-grid>
+                                                <div class="uk-width-expand">
+                                                    <h3 id="verify-change-box-header" class="uk-card-title uk-margin-remove-bottom">Header</h3>
+                                                </div>
+                                            </div>
+                                            <p id="verify-change-box-body">Body</p>
+                                            <b id="verify-box-current-value">current value</b>
+                                            <p>to</p>
+                                            <b id="verify-box-new-value">new value</b>
+                                        </div>
+                                        <div class="uk-card-footer uk-background-muted uk-flex uk-flex-middle uk-flex-right@s">
+                                            <div uk-grid class="uk-flex-middle uk-grid-small">
+                                                <div class="uk-flex-last@s">
+                                                    <button id="verify-change-box-confirm" class="uk-button uk-button-danger" type="button">Button</button>
+                                                </div>
+                                                <div class="uk-flex-first@s">
+                                                    <button id="verify-change-box-cancel" class="uk-button uk-button-text" type="button">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="choose-action-page" hidden>
+                <div class="uk-width-medium uk-padding-small">
+                    <fieldset class="uk-fieldset">
+                        <legend class="uk-legend">Choose an action.</legend>
+
+                        <div class="uk-margin">
+                            <button id="btn-choose-action-change-email" class="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1">CHANGE EMAIL</button>
+                        </div>
+                        <div class="uk-margin">
+                            <button id="btn-choose-action-change-password" class="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1">CHANGE PASSWORD</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="action-succesful-page" hidden>
+                <div class="uk-section uk-section-muted uk-flex uk-flex-middle" uk-height-viewport="offset-top: true">
+                    <div class="uk-width-1-1">
+                        <div class="uk-container">
+                            <div uk-grid>
+                                <div class="uk-width-1-1@m">
+                                    <div class="uk-card uk-card-default uk-width-large uk-margin-auto uk-box-shadow-large">
+                                        <div class="uk-card-body">
+                                            <div uk-grid>
+                                                <div class="uk-width-expand">
+                                                    <h3 id="action-successful-header" class="uk-card-title uk-margin-remove-bottom">Action completed successfully.</h3>
+                                                </div>
+                                            </div>
+                                            <p id="action-successful-body">Body</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="change-email-page" hidden>
+                <div class="uk-width-medium uk-padding-small">
+                    <fieldset class="uk-fieldset">
+                        <legend class="uk-legend">Change your E-Mail</legend>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                                <input id="input-new-email" class="uk-input uk-form-large" required placeholder="New E-Mail address." type="text">
+                            </div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <button id="btn-change-email" class="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1">CHANGE EMAIL</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="change-password-page" hidden>
+                <div class="uk-width-medium uk-padding-small">
+                    <fieldset class="uk-fieldset">
+                        <legend class="uk-legend">Change your password</legend>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                                <input id="input-new-password" class="uk-input uk-form-large" required placeholder="New password." type="text">
+                            </div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <button id="btn-change-password" class="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1">CHANGE PASSWORD</button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div id="login-page">
+                <div class="uk-width-medium uk-padding-small">
+                    <fieldset class="uk-fieldset">
+                        <legend class="uk-legend">Login to Everybody Edits</legend>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                                <input id="input-email" class="uk-input uk-form-large" required placeholder="E-Mail" type="text">
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                                <input id="input-password" class="uk-input uk-form-large" required placeholder="Password" type="password">
+                            </div>
+                        </div>
+
+                        <div class="uk-margin">
+                            <button id="btn-login" class="uk-button uk-button-primary uk-button-primary uk-button-large uk-width-1-1">LOG IN</button>
+                        </div>
+                    </fieldset>
+                    <div>
+                        <div class="uk-text-center">
+                            <a class="uk-link-reset uk-text-small" uk-toggle="target: #recover;animation: uk-animation-slide-top-small">Forgot your password?</a>
+                        </div>
+                        <div class="uk-margin-small-top" id="recover" hidden>
+                            <div class="uk-margin-small">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: mail"></span>
+                                    <input id="input-recover-email" class="uk-input" placeholder="E-mail" required type="text">
+                                </div>
+                            </div>
+
+                            <div class="uk-margin-small">
+                                <button id="btn-recover-password" class="uk-button uk-button-primary uk-button-primary uk-width-1-1">SEND PASSWORD</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UIkit JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-rc.23/js/uikit-icons.min.js"></script>
+    </body>
+
+    <script>
+        // page load
+
+        var current_email = "";
+        var current_password = "";
+
+        var new_email = "";
+        var new_password = "";
+
+        var action = "";
+
+        $(() => {
+            $('#btn-recover-password').click(() => {
+                var email = $('#input-recover-email').val();
+
+                if (!email) {
+                    alert('You must enter in a non-empty email address in order to recover your password.');
+                    return;
+                }
+
+                PlayerIO.quickConnect.simpleRecoverPassword('everybody-edits-su9rn58o40itdbnw69plyw', email, function() {},
+                    function(error) {
+                        alert(error);
+                    });
+            });
+
+            $('#btn-choose-action-change-email').click(() => {
+                $('#choose-action-page').attr('hidden', true);
+                $('#change-email-page').attr('hidden', false);
+            });
+
+            $('#verify-change-box-cancel').click(() => {
+                $('#verify-change-box').attr('hidden', true);
+                $('#choose-action-page').attr('hidden', false);
+            });
+
+            $('#verify-change-box-confirm').click(() => {
+                if (action == 'change-email') {
+                    changeEmail(current_email, current_password, new_email);
+                } else if (action == 'change-password') {
+                    changePassword(current_email, current_password, new_password);
+                } else {
+                    alert('An unexpected error occurred: Unknown action.');
+                }
+            });
+
+            $('#btn-change-email').click(() => {
+                action = "change-email";
+                new_email = $('#input-new-email').val();
+
+                $('#change-email-page').attr('hidden', true);
+
+                $('#verify-change-box-header').text('Change E-Mail');
+                $('#verify-change-box-body').text('Are you sure you want to change your email? By doing so, your email address will be changed from:');
+                $('#verify-box-current-value').text(current_email);
+                $('#verify-box-new-value').text(new_email);
+                $('#verify-change-box-confirm').text('Change E-Mail');
+
+                $('#verify-change-box').attr('hidden', false);
+            });
+
+
+            $('#btn-change-password').click(() => {
+                action = "change-password";
+                new_password = $('#input-new-password').val();
+
+                $('#change-password-page').attr('hidden', true);
+
+                $('#verify-change-box-header').text('Change password');
+                $('#verify-change-box-body').text('Are you sure you want to change your password? By doing so, your password will be changed from:');
+                $('#verify-box-current-value').text(current_password);
+                $('#verify-box-new-value').text(new_password);
+                $('#verify-change-box-confirm').text('Change password');
+
+                $('#verify-change-box').attr('hidden', false);
+            });
+
+            $('#btn-choose-action-change-password').click(() => {
+                $('#choose-action-page').attr('hidden', true);
+                $('#change-password-page').attr('hidden', false);
+            });
+
+            $('#btn-login').click(() => {
+                var email = $('#input-email').val();
+                var password = $('#input-password').val();
+
+                if (!email) {
+                    alert('You must enter in a non-empty email address in order to login.');
+                    return;
+                }
+
+                if (!password) {
+                    alert('You must enter in a non-empty password in order to login.');
+                    return;
+                }
+
+                PlayerIO.authenticate("everybody-edits-su9rn58o40itdbnw69plyw", "simpleusers", {
+                        email: email,
+                        password: password
+                    }, {},
+                    (client) => {
+                        current_email = email;
+                        current_password = password;
+
+                        $('#login-page').attr('hidden', true);
+                        $('#choose-action-page').attr('hidden', false);
+                    },
+                    (error) => {
+                        alert('Unable to login to Everybody Edits. ' + error.message);
+                    });
+            });
+        });
+
+        function changeEmail(currentEmail, password, newEmail) {
+            PlayerIO.authenticate(
+                "everybody-edits-su9rn58o40itdbnw69plyw",
+                "simpleUsers", {
+                    email: currentEmail,
+                    password: password,
+                    changeemail: "true",
+                    newemail: newEmail
+                }, {},
+                function(client) {},
+                function(error) {
+                    if (error.code == PlayerIOErrorCode.GeneralError) {
+                        if (error.message.includes('Email address changed')) {
+                            $('#verify-change-box').attr('hidden', true);
+                            $('#action-succesful-page').attr('hidden', false);
+                            $('#action-successful-body').text('You have successfully changed your Everybody Edits email!');
+
+                            return;
+                        }
+                    }
+
+                    alert(error);
+                }
+            );
+        }
+
+        function changePassword(currentEmail, currentPassword, newPassword) {
+            PlayerIO.authenticate(
+                "everybody-edits-su9rn58o40itdbnw69plyw",
+                "simpleUsers", {
+                    email: currentEmail,
+                    password: currentPassword,
+                    changepassword: "true",
+                    newpassword: newPassword
+                }, {},
+                function(client) {},
+                function(error) {
+                    if (error.code == PlayerIOErrorCode.GeneralError) {
+                        if (error.message.includes('Password changed')) {
+                            $('#verify-change-box').attr('hidden', true);
+                            $('#action-succesful-page').attr('hidden', false);
+                            $('#action-successful-body').text('You have successfully changed your Everybody Edits password!');
+
+                            return;
+                        }
+                    }
+
+                    alert(error);
+                }
+            );
+        }
+    </script>
+
+</html>
