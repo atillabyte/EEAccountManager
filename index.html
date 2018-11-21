@@ -201,6 +201,7 @@
         var action = "";
 
         $(() => {
+            PlayerIO.useSecureApiRequests = true;
             $('#btn-recover-password').click(() => {
                 var email = $('#input-recover-email').val();
 
